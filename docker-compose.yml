@@ -1,0 +1,16 @@
+services:
+  backend-api:
+    build:
+      context: ./src/backend/GameOfLife.API
+    ports:
+      - "5001:80"
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+
+  frontend-app:
+    build:
+      context: ./src/frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend-api

@@ -1,0 +1,13 @@
+# .dockerignore for the .NET API project
+
+# Ignore build outputs
+**/bin
+**/obj
+
+# Ignore user-specific files
+*.user
+*.suo
+
+# Ignore IDE/Editor folders
+.vscode
+.vs
