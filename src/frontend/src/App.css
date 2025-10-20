@@ -1,38 +1,116 @@
-.App {
-  text-align: center;
+:root {
+  --bg: #0f1218;
+  --fg: #e9eef7;
+  --muted: #9fb0c8;
+  --accent: #61dafb;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: radial-gradient(1200px 800px at 70% 10%, #1b2230 0%, #0f1218 60%);
+  color: var(--fg);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+    Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+h1 {
+  font-size: 22px;
+  margin: 0 0 8px 0;
+}
+.sub {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.panel {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid #2a2f3a;
+  border-radius: 8px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.btn {
+  background: #1e2430;
+  color: var(--fg);
+  border: 1px solid #2a2f3a;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.btn:hover {
+  filter: brightness(1.1);
+}
+.btn.primary {
+  background: #263046;
+}
+.btn.success {
+  background: #1c7c54;
+}
+.btn.danger {
+  background: #7c1c2a;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: #141a24;
+  border: 1px solid #2a2f3a;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: var(--muted);
+}
+
+.label input[type="range"] {
+  width: 150px;
+}
+
+input[type="number"],
+input.rule {
+  background: #0f1218;
+  color: var(--fg);
+  border: 1px solid #2a2f3a;
+  border-radius: 6px;
+  padding: 6px 8px;
+  width: 110px;
+}
+input.rule {
+  width: 140px;
 }

@@ -1,41 +1,62 @@
+using GameOfLife.Core.Abstractions;
+using GameOfLife.Core.Rules;
+using GameOfLife.Core.Services;
+using GameOfLife.API.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers().AddJsonOptions(o =>
+{
+    o.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.WithOrigins("http://localhost:3000")
-                                .AllowAnyHeader()
-                                .AllowAnyMethod();
-                      });
-});
 
-builder.Services.AddControllers();
+builder.Services.AddSingleton<IGameOfLifeEngine, GameOfLifeEngine>();
+builder.Services.AddSingleton<IRuleParser, DefaultBsRuleParser>();
+
+
+var dataPath = builder.Configuration["Data:Path"] ?? "/app/data/boards.json";
+builder.Services.AddSingleton<IBoardStore>(sp =>
+    new FileBoardStore(dataPath, sp.GetRequiredService<IRuleParser>()));
+
+builder.Services.AddScoped<IBoardService, BoardService>();
+
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseExceptionHandler("/error");
+app.Map("/error", (HttpContext http) => Results.Problem());
 
-app.UseCors(MyAllowSpecificOrigins);
 
-app.UseAuthorization();
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 
 app.MapControllers();
 
+
+app.MapFallbackToFile("index.html");
+
 app.Run();
+
+public sealed class DefaultBsRuleParser : IRuleParser
+{
+    public IGameOfLifeRule Default => BsRule.Conway();
+
+    public bool TryParse(string notation, out IGameOfLifeRule? rule, out string? error)
+    {
+        var ok = BsRule.TryParse(notation, out var parsed, out error);
+        rule = parsed;
+        return ok;
+    }
+}
